@@ -1,0 +1,14 @@
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            {{#link-to "index" class="navbar-brand"}}首页{{/link-to}}
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li>{{#link-to "login"}}登录{{/link-to}}</li>
+            <li>{{#link-to "register"}}注册{{/link-to}}</li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    {{outlet}}
+</div>

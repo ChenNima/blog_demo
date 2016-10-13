@@ -1,0 +1,15 @@
+<form class="login-form jumbotron">
+    <h2>使用账号和密码登录</h2>
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-user"> 账号</span></span>
+        {{#input type="text" class="form-control" value=userData.username}}{{/input}}
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-eye-close"> 密码</span></span>
+        {{#input type="password" class="form-control" value=userData.password}}{{/input}}
+    </div>
+    <button class="btn btn-primary" {{action 'login'}}>登录</button>
+    <button class="btn btn-default">{{#link-to "register"}}注册{{/link-to}}</button>
+</form>
+
+{{outlet}}

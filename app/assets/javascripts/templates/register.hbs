@@ -1,0 +1,18 @@
+<form class="login-form jumbotron">
+    <h2>欢迎注册</h2>
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-user"> 账号</span></span>
+        {{#input type="text" class="form-control"}}{{/input}}
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-eye-close"> 密码</span></span>
+        {{#input type="password" class="form-control"}}{{/input}}
+    </div>
+    <div class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-eye-close"> 重复密码</span></span>
+        {{#input type="password" class="form-control"}}{{/input}}
+    </div>
+    <button class="btn btn-primary">注册</button>
+</form>
+
+{{outlet}}

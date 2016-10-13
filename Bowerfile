@@ -1,0 +1,6 @@
+# A sample Bowerfile
+# Check out https://github.com/42dev/bower-rails#ruby-dsl-configuration for more options
+
+# asset 'bootstrap'
+asset "ember", "2.8.0"
+asset "bootstrap", "3.3.6"

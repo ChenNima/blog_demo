@@ -1,0 +1,7 @@
+{
+  "name": "dsl-generated-dependencies",
+  "dependencies": {
+    "ember": "2.8.0",
+    "bootstrap": "3.3.6"
+  }
+}
