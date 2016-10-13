@@ -53,8 +53,9 @@ BlogDemo.IndexController = Ember.Controller.extend({
             comment.commenter = name;
             var commentBody = {comment: comment};
             $.post('articles/' + article_id + '/comments',commentBody).then(function (data) {
-                debugger
-            });
+                this.get('updateArticles').call(this);
+                this.set('comment.content','');
+            }.bind(this));
         }
 
     }

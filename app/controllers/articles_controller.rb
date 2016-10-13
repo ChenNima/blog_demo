@@ -7,7 +7,12 @@ class ArticlesController < ApplicationController
   def index
     articles = Article.find_by_sql("SELECT name,content,articles.created_at,articles.id FROM articles
   INNER JOIN users ON articles.user_id = users.id")
-    render :json => articles.to_json
+    new_articles = []
+    articles.each do |article|
+      new_articles.push({:id => article.id,:content=>article.content,:comments=>article.comments,:name=>article.name,:created_at=>article.created_at})
+    end
+  #   articles = Article.joins(:comments)
+    render :json => new_articles.to_json
 
   end
 

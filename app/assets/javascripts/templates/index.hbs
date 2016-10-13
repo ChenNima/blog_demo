@@ -10,10 +10,19 @@
         <h4><b>{{article.name}} :</b></h4>
         <h5 class="">{{article.content}}</h5>
         <p class="pull-right text-muted">{{article.created_at}}</p>
-        {{#if editIndex}}
-        {{#input type="text" class="form-control" placeholder="输入评论.." value=comment.content}}{{/input}}
-        <button class="btn btn-primary" {{action "comment" article.id}}>提交</button>
-        {{/if}}
+        <ul class="list-group">
+            {{#each article.comments as |comment index|}}
+            <li class="list-group-item"><b>{{comment.commenter}}:</b> {{comment.content}}</li>
+            {{else}}
+            <li class="list-group-item">还没有评论</li>
+            {{/each}}
+        </ul>
+        <div class="input-group">
+            {{#input type="text" class="form-control" placeholder="输入评论.." value=comment.content}}{{/input}}
+            <span class="input-group-btn">
+                <button class="btn btn-primary" {{action "comment" article.id}}>提交</button>
+            </span>
+        </div>
     </div>
 {{else}}
 <p>没有文字</p>
