@@ -1,5 +1,21 @@
 <div class="well">
-    <h4>发布新博客</h4>
-    <textarea  class="form-control" rows="5"></textarea>
+    <h4>发布新博客
+        <small class="text-muted">你还可以输入 {{vol}}/140 个字符</small>
+        <button class="btn btn-primary pull-right" style="margin-bottom: 10px" {{action 'submit'}}>发布</button>
+    </h4>
+    {{#textarea class="form-control" rows="5" maxlength="140" value=article.content}}{{/textarea}}
 </div>
+{{#each articles as |article index|}}
+    <div class="well">
+        <h4><b>{{article.name}} :</b></h4>
+        <h5 class="">{{article.content}}</h5>
+        <p class="pull-right text-muted">{{article.created_at}}</p>
+        {{#if editIndex}}
+        {{#input type="text" class="form-control" placeholder="输入评论.." value=comment.content}}{{/input}}
+        <button class="btn btn-primary" {{action "comment" article.id}}>提交</button>
+        {{/if}}
+    </div>
+{{else}}
+<p>没有文字</p>
+{{/each}}
 {{outlet}}

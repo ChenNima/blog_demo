@@ -4,8 +4,13 @@
             {{#link-to "index" class="navbar-brand"}}首页{{/link-to}}
         </div>
         <ul class="nav navbar-nav navbar-right">
+            {{#if loginStatus}}
+            <li><a>欢迎,{{userName}}</a></li>
+            <li><a {{action 'logout'}}>登出</a></li>
+            {{else}}
             <li>{{#link-to "login"}}登录{{/link-to}}</li>
             <li>{{#link-to "register"}}注册{{/link-to}}</li>
+            {{/if}}
         </ul>
     </div>
 </nav>

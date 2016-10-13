@@ -14,10 +14,10 @@ BlogDemo.LoginController = Ember.Controller.extend({
             }
         };
         $.post('login',user).then(function(data){
-            var testService = Ember.inject.service('login-service');
             if(data.msg!='success'){
                 alert(data.msg);
             }else{
+                BlogDemo.services.login.login(data.name,data.id);
                 window.location.href='#/';
             }
         });

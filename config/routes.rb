@@ -4,9 +4,15 @@ Rails.application.routes.draw do
 
   post '/login', to: 'users#login'
 
-  resources :users
+  get '/cookie_login', to: 'users#cookie_login'
 
-  resources :user
+  get '/logout', to: 'users#logout'
+
+  resources :articles do
+    resources :comments
+  end
+
+  resources :users
 
   root 'welcome#index'
   # The priority is based upon order of creation: first created -> highest priority.

@@ -5,6 +5,3 @@ BlogDemo.Router.map(function() {
     this.route("login");
     this.route("register");
 });
-
-BlogDemo.IndexRoute = Ember.Route.extend({
-});
