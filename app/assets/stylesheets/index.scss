@@ -1,0 +1,23 @@
+.article{
+  .rm-btn{
+    opacity: 0;
+  }
+}
+
+.article:hover {
+  .rm-btn{
+    opacity: 1;
+  }
+}
+
+.comment{
+  .c-rm-btn{
+    opacity: 0;
+  }
+}
+
+.comment:hover {
+  .c-rm-btn{
+    opacity: 1;
+  }
+}

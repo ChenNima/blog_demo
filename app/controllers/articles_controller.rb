@@ -7,12 +7,24 @@ class ArticlesController < ApplicationController
   def index
     articles = Article.find_by_sql("SELECT name,content,articles.created_at,articles.id FROM articles
   INNER JOIN users ON articles.user_id = users.id")
-    new_articles = []
-    articles.each do |article|
-      new_articles.push({:id => article.id,:content=>article.content,:comments=>article.comments,:name=>article.name,:created_at=>article.created_at})
-    end
+  #   new_articles = []
+  #   articles.each do |article|
+  #     new_articles.push({:id => article.id,:content=>article.content,:comments=>article.comments,:name=>article.name,:created_at=>article.created_at})
+  #   end
+
+    # remder json: Article.joins(:comments).pluck(:comments).to_json
+
+    # render json: Article.preload(:comments).to_json(include: :comments)
+    render json: articles.to_json(include: :comments)
+    # json_array = []
+    # Article.preload(:comments).map do |article|
+    #   json_array.push({:id => article.id,:content=>article.content,:comments=>article.comments,:created_at=>article.created_at})
+    # end
+    # render json: json_array.to_json
+
+
   #   articles = Article.joins(:comments)
-    render :json => new_articles.to_json
+  #   render :json => Article.preload(:comments).to_json
 
   end
 
@@ -30,6 +42,13 @@ class ArticlesController < ApplicationController
     else
       render :json=>{:msg => 'fail'}.to_json
     end
+  end
+
+  def destroy
+    @article = Article.find(params[:id])
+    @article.destroy
+
+    render :json=>{:msg => 'success'}.to_json
   end
 
   def article_params

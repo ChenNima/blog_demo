@@ -1,22 +1,49 @@
 <div class="well">
+    {{#if loginStatus}}
     <h4>发布新博客
         <small class="text-muted">你还可以输入 {{vol}}/140 个字符</small>
         <button class="btn btn-primary pull-right" style="margin-bottom: 10px" {{action 'submit'}}>发布</button>
     </h4>
     {{#textarea class="form-control" rows="5" maxlength="140" value=article.content}}{{/textarea}}
+    {{else}}
+    <h3>请
+        {{#link-to "login"}}登录{{/link-to}}
+        或
+        {{#link-to "register"}}注册{{/link-to}}
+        后再发表博客
+    </h3>
+    {{/if}}
 </div>
 {{#each articles as |article index|}}
-    <div class="well">
-        <h4><b>{{article.name}} :</b></h4>
+    <div class="well article">
+        <button class="btn btn-link pull-right btn-sm rm-btn" {{action "removeArticle" index}}>
+            <span class="glyphicon glyphicon-remove text-muted"></span>
+        </button>
+        <h4><b>{{article.name}} :</b>
+        </h4>
         <h5 class="">{{article.content}}</h5>
         <p class="text-muted" style="text-align:right">{{article.created_at}}</p>
-        <ul class="list-group">
-            {{#each article.comments as |comment c_index|}}
-            <li class="list-group-item"><b>{{comment.commenter}}:</b> {{comment.content}}</li>
-            {{else}}
-            <li class="list-group-item">还没有评论</li>
-            {{/each}}
-        </ul>
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <a data-toggle="collapse" href="#{{index}}">
+                    评论列表
+                </a>
+            </div>
+            <div id={{index}} class="panel-collapse collapse in">
+                <ul class="list-group">
+                   {{#each article.comments as |comment c_index|}}
+                   <li class="list-group-item comment"><b>{{comment.commenter}}:</b> {{comment.content}}
+                       <button class="btn btn-link pull-right btn-sm c-rm-btn" {{action 'removeComments' index c_index}}>
+                           <span class="glyphicon glyphicon-remove text-muted"></span>
+                       </button>
+                   </li>
+                   {{else}}
+                   <li class="list-group-item">还没有评论</li>
+                   {{/each}}
+               </ul>
+            </div>
+        </div>
+        {{#if loginStatus}}
         <form name="chatForm" role="form" {{action "comment" article.id index on="submit"}}>
         <div class="input-group">
             {{#input type="text" class="form-control" placeholder="输入评论.." value=article.comment}}{{/input}}
@@ -25,6 +52,7 @@
             </span>
         </div>
         </form>
+        {{/if}}
     </div>
 {{else}}
 <p>没有文字</p>

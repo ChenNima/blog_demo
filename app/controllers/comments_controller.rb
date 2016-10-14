@@ -10,6 +10,13 @@ class CommentsController < ApplicationController
     render :json => {:msg=>'success',:article_id => @article.id,:id => @comment.id}
   end
 
+  def destroy
+    @article = Article.find(params[:article_id])
+    @comment = @article.comments.find(params[:id])
+    @comment.destroy
+    render :json=>{:msg => 'success'}.to_json
+  end
+
   private
   def comment_params
     params.require(:comment).permit(:commenter, :content)

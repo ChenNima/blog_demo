@@ -44,11 +44,46 @@ BlogDemo.IndexController = Ember.Controller.extend({
             this.set('editIndex',index);
         },
         comment:function(article_id,index) {
+            if(!this.get('loginStatus')){
+                alert('请登录!');
+                return;
+            }
             var name = this.get('loginService').userName;
-            var comment = {content:this.get('articles')[index].comment};
+            var articles = this.get('articles');
+            var comment = {content:articles[index].comment};
             comment.commenter = name;
             var commentBody = {comment: comment};
             $.post('articles/' + article_id + '/comments',commentBody).then(function (data) {
+                this.get('updateArticles').call(this);
+            }.bind(this));
+        },
+        removeArticle:function(index){
+            if(!this.get('loginStatus')){
+                alert('请登录!');
+                return;
+            }
+            var article = this.get('articles')[index];
+            if (this.get('loginService').userName!=article.name){
+                alert('只有作者才能删除自己的文章!');
+                return;
+            }
+            $.post('articles/'+article.id,{_method: "delete"}).then(function (data) {
+                this.get('updateArticles').call(this);
+            }.bind(this));
+        },
+        removeComments:function(aIndex,cIndex){
+            if(!this.get('loginStatus')){
+                alert('请登录!');
+                return;
+            }
+            var article = this.get('articles')[aIndex];
+            var comment = article.comments[cIndex];
+            var userName = this.get('loginService').userName;
+            if(userName!=article.name&&userName!=comment.commenter){
+                alert('文章或评论作者才能删除评论!');
+                return;
+            }
+            $.post('articles/'+article.id+'/comments/'+comment.id,{_method: "delete"}).then(function (data) {
                 this.get('updateArticles').call(this);
             }.bind(this));
         }
