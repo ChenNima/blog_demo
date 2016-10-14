@@ -17,6 +17,10 @@ BlogDemo.IndexController = Ember.Controller.extend({
 
     },
 
+    obArticle : function(){
+        return this.get('articles');
+    }.property('articles'),
+
     updateArticles:function() {
         $.get('articles').then(function(data){
             this.set('articles',data.reverse());
@@ -35,6 +39,10 @@ BlogDemo.IndexController = Ember.Controller.extend({
 
     actions:{
         submit:function(){
+            //var article = this.get('article');
+            //article.user = 'lala'
+            //this.get('articles').unshift(article);
+            //this.set('articles',this.get('articles'));
             $.post('articles',{article:this.get('article')}).then(function(data){
                 this.get('updateArticles').call(this);
                 this.set('article.content','');
@@ -53,10 +61,17 @@ BlogDemo.IndexController = Ember.Controller.extend({
             var comment = {content:articles[index].comment};
             comment.commenter = name;
             var commentBody = {comment: comment};
+            var article = this.get('articles')[index];
+
+            article.comments.push(comment);
+
+            //Ember.set(article,'comments',article.comments);
+
             $.post('articles/' + article_id + '/comments',commentBody).then(function (data) {
                 this.get('updateArticles').call(this);
             }.bind(this));
         },
+
         removeArticle:function(index){
             if(!this.get('loginStatus')){
                 alert('请登录!');

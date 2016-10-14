@@ -33,13 +33,13 @@ class UsersController < ApplicationController
     exist_user  = User.find_by_name(@user.name)
 
     if exist_user
-      render :json=>{:msg => 'user exists'}.to_json, status=>'500'
+      render :json=>{:msg => 'user exists',:code=>0}.to_json
     elsif @user.save
       session[:current_user_id] = @user.id
       cookies[:user_id] = {:value => @user.id,:expires => 2.weeks.from_now.utc}
-      render :json=>{:msg => 'success',:id=>@user.id,:name=>@user.name}.to_json
+      render :json=>{:msg => 'success',:code=>1,:id=>@user.id,:name=>@user.name}.to_json
     else
-      render :json=>{:msg => 'fail'}.to_json, status=>'500'
+      render :json=>{:msg => 'fail'}.to_json
     end
   end
 
@@ -67,10 +67,10 @@ class UsersController < ApplicationController
     if exist_user
       session[:current_user_id] = exist_user.id
       cookies[:user_id] = {:value => exist_user.id,:expires => 2.weeks.from_now.utc}
-      res =  exist_user.email != @user.email ? {:msg => 'password not match'}:{:msg => 'success',:id=>exist_user.id,:name=>exist_user.name}
+      res =  exist_user.email != @user.email ? {:msg => 'password not match',:code=>1}:{:msg => 'success',:code=>0,:id=>exist_user.id,:name=>exist_user.name}
       render :json => res.to_json
     else
-      render :json =>{:msg => 'user not found'}.to_json, status=>'500'
+      render :json =>{:msg => 'user not found',:code=>2}.to_json, status=>'500'
     end
   end
 

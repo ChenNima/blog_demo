@@ -14,15 +14,15 @@
     </h3>
     {{/if}}
 </div>
-{{#each articles as |article index|}}
+{{#each obArticle as |article index|}}
     <div class="well article">
         <button class="btn btn-link pull-right btn-sm rm-btn" {{action "removeArticle" index}}>
             <span class="glyphicon glyphicon-remove text-muted"></span>
         </button>
-        <h3 class="text-info"><b>{{article.name}} :</b>
+        <h3><b>{{article.name}}</b>
         </h3>
-        <div class="well" style="background: rgba(255, 255, 255, 0.8);">
-            <p style="font-size: 17px">{{article.content}}</p>
+        <div class="content">
+            <p style="font-size: 17px;color: white;">{{article.content}}</p>
         </div>
         <p class="text-muted" style="text-align:right">{{article.created_at}}</p>
         <div class="panel panel-info">
@@ -34,7 +34,7 @@
             <div id={{index}} class="panel-collapse collapse in">
                 <ul class="list-group">
                    {{#each article.comments as |comment c_index|}}
-                   <li class="list-group-item comment" style="background: rgb(253, 253, 253);">
+                   <li class="list-group-item comment" style="background: rgb(249, 249, 249);">
                        <b>{{comment.commenter}}:</b> {{comment.content}}
                        <button class="btn btn-link pull-right btn-sm c-rm-btn" {{action 'removeComments' index c_index}}>
                            <span class="glyphicon glyphicon-remove text-muted"></span>

@@ -29,19 +29,15 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    @article = Article.new(article_params)
+
     user_id = session[:current_user_id]
-    user = user_id ? User.find(user_id):nil
-    unless user
+    @user = user_id ? User.find(user_id):nil
+    unless @user
       render :json=>{:msg => 'no such user'}.to_json
       return
     end
-    @article.user_id = user_id
-    if @article.save
-      render :json=>{:msg => 'success',:artical_id => @article.id}.to_json
-    else
-      render :json=>{:msg => 'fail'}.to_json
-    end
+    @article = @user.articles.create(article_params)
+    render :json=>{:msg => 'success',:article_id => @article.id}.to_json
   end
 
   def destroy
