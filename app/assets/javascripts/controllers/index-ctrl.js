@@ -23,10 +23,6 @@ BlogDemo.IndexController = Ember.Controller.extend({
         }.bind(this));
     },
 
-    comment:{
-        content:''
-    },
-
     article:{
         content:''
     },
@@ -47,14 +43,13 @@ BlogDemo.IndexController = Ember.Controller.extend({
         edit:function(index){
             this.set('editIndex',index);
         },
-        comment:function(article_id) {
+        comment:function(article_id,index) {
             var name = this.get('loginService').userName;
-            var comment = this.get('comment');
+            var comment = {content:this.get('articles')[index].comment};
             comment.commenter = name;
             var commentBody = {comment: comment};
             $.post('articles/' + article_id + '/comments',commentBody).then(function (data) {
                 this.get('updateArticles').call(this);
-                this.set('comment.content','');
             }.bind(this));
         }
 

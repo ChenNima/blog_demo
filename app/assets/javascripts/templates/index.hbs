@@ -9,20 +9,22 @@
     <div class="well">
         <h4><b>{{article.name}} :</b></h4>
         <h5 class="">{{article.content}}</h5>
-        <p class="pull-right text-muted">{{article.created_at}}</p>
+        <p class="text-muted" style="text-align:right">{{article.created_at}}</p>
         <ul class="list-group">
-            {{#each article.comments as |comment index|}}
+            {{#each article.comments as |comment c_index|}}
             <li class="list-group-item"><b>{{comment.commenter}}:</b> {{comment.content}}</li>
             {{else}}
             <li class="list-group-item">还没有评论</li>
             {{/each}}
         </ul>
+        <form name="chatForm" role="form" {{action "comment" article.id index on="submit"}}>
         <div class="input-group">
-            {{#input type="text" class="form-control" placeholder="输入评论.." value=comment.content}}{{/input}}
+            {{#input type="text" class="form-control" placeholder="输入评论.." value=article.comment}}{{/input}}
             <span class="input-group-btn">
-                <button class="btn btn-primary" {{action "comment" article.id}}>提交</button>
+                <input class="btn btn-primary" type="submit" value="提交">
             </span>
         </div>
+        </form>
     </div>
 {{else}}
 <p>没有文字</p>
