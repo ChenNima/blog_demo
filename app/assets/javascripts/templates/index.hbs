@@ -25,6 +25,7 @@
             <p style="font-size: 17px;color: white;">{{article.content}}</p>
         </div>
         <p class="text-muted" style="text-align:right">{{article.created_at}}</p>
+        {{#unless article.submitting}}
         <div class="panel panel-info">
             <div class="panel-heading">
                 <a data-toggle="collapse" href="#{{index}}">
@@ -56,6 +57,11 @@
         </div>
         </form>
         {{/if}}
+        {{else}}
+        <div class="well-sm">
+            <h3>发送中...</h3>
+        </div>
+        {{/unless}}
     </div>
 {{else}}
 <p>没有文字</p>

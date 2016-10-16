@@ -17,9 +17,13 @@ BlogDemo.IndexController = Ember.Controller.extend({
 
     },
 
-    obArticle : function(){
+    //obArticle : function(){
+    //    return this.get('articles');
+    //}.property('articles'),
+
+    obArticle : Ember.computed('articles.length',function(){
         return this.get('articles');
-    }.property('articles'),
+    }),
 
     updateArticles:function() {
         $.get('articles').then(function(data){
@@ -39,14 +43,27 @@ BlogDemo.IndexController = Ember.Controller.extend({
 
     actions:{
         submit:function(){
-            //var article = this.get('article');
-            //article.user = 'lala'
-            //this.get('articles').unshift(article);
-            //this.set('articles',this.get('articles'));
+          //debugger;
+            var content = this.get('article').content;
+            var name = this.get('loginService').userName;
+            var elderArticles = this.get('articles');
+            var newArticle = {content:content,name:name,submitting:true,comments:[]};
+            elderArticles.unshift(newArticle);
+            this.set('articles',[]);
+            this.set('articles',elderArticles);
+
             $.post('articles',{article:this.get('article')}).then(function(data){
-                this.get('updateArticles').call(this);
+                newArticle.id = data.article_id;
+                Ember.set(newArticle,'submitting',false);
+                //newArticle.submitting = false;
+                debugger
                 this.set('article.content','');
-            }.bind(this))
+            }.bind(this));
+
+            //$.post('articles',{article:this.get('article')}).then(function(data){
+            //    this.get('updateArticles').call(this);
+            //    this.set('article.content','');
+            //}.bind(this))
         },
         edit:function(index){
             this.set('editIndex',index);
