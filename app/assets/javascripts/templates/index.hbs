@@ -21,8 +21,9 @@
                 <span class="glyphicon glyphicon-remove text-muted"></span>
             </button>
         {{/unless}}
-            <h3><b>{{article.user.name}}</b>
-        </h3>
+            <h3>
+              <b>{{article.user.name}}</b>
+            </h3>
         <div class="content">
             <p style="font-size: 17px;color: white;">{{article.content}}</p>
         </div>
@@ -51,12 +52,12 @@
            </div>
            {{#if loginStatus}}
                 <form name="chatForm" role="form" {{action "comment" article on="submit"}}>
-                <div class="input-group">
-                    {{#input type="text" class="form-control" placeholder="输入评论.." value=article.comment}}{{/input}}
-                    <span class="input-group-btn">
-                        <input class="btn btn-primary" type="submit" value="提交">
-                    </span>
-                </div>
+                  <div class="input-group">
+                      {{#input type="text" class="form-control" placeholder="输入评论.." value=article.comment}}{{/input}}
+                      <span class="input-group-btn">
+                          <input class="btn btn-primary" type="submit" value="提交">
+                        </span>
+                      </div>
                 </form>
            {{/if}}
         {{else}}
