@@ -17,101 +17,112 @@ BlogDemo.IndexController = Ember.Controller.extend({
 
     },
 
-    //obArticle : function(){
-    //    return this.get('articles');
-    //}.property('articles'),
+    obArticle : function(){
+        return this.get('articles').toArray().reverse();
+    }.property('articles.length'),
 
-    obArticle : Ember.computed('articles.length',function(){
-        return this.get('articles');
-    }),
+    //obArticle : Ember.computed('articles.@each.content',function(){
+    //    return this.get('articles');
+    //}),
+
+    //updateArticles:function() {
+    //    $.get('articles').then(function(data){
+    //        this.set('articles',data);
+    //    }.bind(this));
+    //},
 
     updateArticles:function() {
-        $.get('articles').then(function(data){
-            this.set('articles',data.reverse());
-        }.bind(this));
+        this.set('articles',this.get('store').findAll('article'));
     },
 
     article:{
         content:''
     },
 
-    editIndex:1,
-
-    isEditable:function(index){
-        return index === this.get('editIndex');
-    },
-
     actions:{
-        submit:function(){
-          //debugger;
+        submit:function() {
             var content = this.get('article').content;
             var name = this.get('loginService').userName;
-            var elderArticles = this.get('articles');
-            var newArticle = {content:content,name:name,submitting:true,comments:[]};
-            elderArticles.unshift(newArticle);
-            this.set('articles',[]);
-            this.set('articles',elderArticles);
-
-            $.post('articles',{article:this.get('article')}).then(function(data){
-                newArticle.id = data.article_id;
-                Ember.set(newArticle,'submitting',false);
-                //newArticle.submitting = false;
+            var newArticleParams = {
+                content: content,
+                user: {
+                    name: name
+                },
+                comments: []
+            };
+            var newArticle = this.store.createRecord('article',newArticleParams);
+            Ember.set(newArticle,'isSubmitting',true);
+            debugger;
+            this.set('article.content','');
+            newArticle.save().then(function(data){
+                Ember.set(data,'isSubmitting',false);
                 debugger
-                this.set('article.content','');
             }.bind(this));
-
-            //$.post('articles',{article:this.get('article')}).then(function(data){
-            //    this.get('updateArticles').call(this);
-            //    this.set('article.content','');
-            //}.bind(this))
-        },
-        edit:function(index){
-            this.set('editIndex',index);
-        },
-        comment:function(article_id,index) {
+        }
+        ,
+        //submit:function(){
+        //    debugger
+        //    var content = this.get('article').content;
+        //    var name = this.get('loginService').userName;
+        //    var elderArticles = this.get('articles');
+        //    var newArticle = {
+        //        content:content,
+        //        user:{
+        //            name:name
+        //        },
+        //        submitting:true,
+        //        comments:[]
+        //    };
+        //    elderArticles.unshiftObject(newArticle);
+        //
+        //    $.post('articles',{article:this.get('article')}).then(function(data){
+        //        newArticle.id = data.id;
+        //        Ember.set(newArticle,'submitting',false);
+        //        debugger;
+        //        this.set('article.content','');
+        //    }.bind(this));
+        //},
+        comment:function(article) {
             if(!this.get('loginStatus')){
                 alert('请登录!');
                 return;
             }
             var name = this.get('loginService').userName;
-            var articles = this.get('articles');
-            var comment = {content:articles[index].comment};
+            var comment = {content:article.comment};
             comment.commenter = name;
             var commentBody = {comment: comment};
-            var article = this.get('articles')[index];
+            article.get('comments').push(comment);
 
-            article.comments.push(comment);
+            Ember.set(article,'comment','');
 
-            //Ember.set(article,'comments',article.comments);
-
-            $.post('articles/' + article_id + '/comments',commentBody).then(function (data) {
+            $.post('articles/' + article.id + '/comments',commentBody).then(function (data) {
                 this.get('updateArticles').call(this);
             }.bind(this));
         },
 
-        removeArticle:function(index){
+        removeArticle:function(article){
             if(!this.get('loginStatus')){
                 alert('请登录!');
                 return;
             }
-            var article = this.get('articles')[index];
-            if (this.get('loginService').userName!=article.name){
+            //var article = this.get('articles')[index];
+            if (this.get('loginService').userName!=article.get('user').name){
                 alert('只有作者才能删除自己的文章!');
                 return;
             }
-            $.post('articles/'+article.id,{_method: "delete"}).then(function (data) {
-                this.get('updateArticles').call(this);
-            }.bind(this));
+            article.destroyRecord();
+            //$.post('articles/'+article.id,{_method: "delete"}).then(function (data) {
+            //    this.get('updateArticles').call(this);
+            //}.bind(this));
         },
-        removeComments:function(aIndex,cIndex){
+        removeComments:function(article,cIndex){
             if(!this.get('loginStatus')){
                 alert('请登录!');
                 return;
             }
-            var article = this.get('articles')[aIndex];
-            var comment = article.comments[cIndex];
+            var comment = article.get('comments')[cIndex];
             var userName = this.get('loginService').userName;
-            if(userName!=article.name&&userName!=comment.commenter){
+            if(userName!=article.get('user').name&&userName!=comment.commenter){
                 alert('文章或评论作者才能删除评论!');
                 return;
             }

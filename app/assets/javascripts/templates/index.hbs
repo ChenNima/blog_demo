@@ -16,16 +16,16 @@
 </div>
 {{#each obArticle as |article index|}}
     <div class="well article">
-        <button class="btn btn-link pull-right btn-sm rm-btn" {{action "removeArticle" index}}>
+        <button class="btn btn-link pull-right btn-sm rm-btn" {{action "removeArticle" article}}>
             <span class="glyphicon glyphicon-remove text-muted"></span>
         </button>
-        <h3><b>{{article.name}}</b>
+        <h3><b>{{article.user.name}}</b>
         </h3>
         <div class="content">
             <p style="font-size: 17px;color: white;">{{article.content}}</p>
         </div>
         <p class="text-muted" style="text-align:right">{{article.created_at}}</p>
-        {{#unless article.submitting}}
+        {{#unless article.isSubmitting}}
         <div class="panel panel-info">
             <div class="panel-heading">
                 <a data-toggle="collapse" href="#{{index}}">
@@ -37,7 +37,7 @@
                    {{#each article.comments as |comment c_index|}}
                    <li class="list-group-item comment" style="background: rgb(249, 249, 249);">
                        <b>{{comment.commenter}}:</b> {{comment.content}}
-                       <button class="btn btn-link pull-right btn-sm c-rm-btn" {{action 'removeComments' index c_index}}>
+                       <button class="btn btn-link pull-right btn-sm c-rm-btn" {{action 'removeComments' article c_index}}>
                            <span class="glyphicon glyphicon-remove text-muted"></span>
                        </button>
                    </li>
@@ -48,7 +48,7 @@
             </div>
         </div>
         {{#if loginStatus}}
-        <form name="chatForm" role="form" {{action "comment" article.id index on="submit"}}>
+        <form name="chatForm" role="form" {{action "comment" article on="submit"}}>
         <div class="input-group">
             {{#input type="text" class="form-control" placeholder="输入评论.." value=article.comment}}{{/input}}
             <span class="input-group-btn">

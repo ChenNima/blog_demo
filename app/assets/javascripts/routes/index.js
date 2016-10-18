@@ -3,11 +3,18 @@
  */
 BlogDemo.IndexRoute = Ember.Route.extend({
     model:function(){
-        return $.get('articles').then(function(data){
-            return data
-        })
+        return this.get('store').findAll('article');
+            //.then(function(data){
+            //debugger;
+            //return data
+        //});
+        //return $.get('articles').then(function(data){
+        //    return data
+        //})
     },
     setupController: function(controller, model) {
-        controller.set('articles', model.reverse());
+        //debugger;
+        controller.set('articles', model);
+        //controller.set('articles', Ember.A(model.reverse()));
     }
 });
