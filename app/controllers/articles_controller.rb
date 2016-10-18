@@ -24,11 +24,12 @@ class ArticlesController < ApplicationController
     user_id = session[:current_user_id]
     @user = user_id ? User.find(user_id):nil
     unless @user
-      render :json=>{:msg => 'no such user'}.to_json
+      render :json=>{:msg => 'no such user'}.to_json,status: 400
       return
     end
     @article = @user.articles.create(article_params)
     render :json=>{:article => {:id => @article.id}}
+    # render :json=>{:msg => 'no such user'}.to_json,status: 400
   end
 
   def destroy

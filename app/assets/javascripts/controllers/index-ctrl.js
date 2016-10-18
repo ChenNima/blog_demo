@@ -17,19 +17,21 @@ BlogDemo.IndexController = Ember.Controller.extend({
 
     },
 
-    obArticle : function(){
+    articlesArray : function(){
         return this.get('articles').toArray().reverse();
     }.property('articles.length'),
 
-    //obArticle : Ember.computed('articles.@each.content',function(){
-    //    return this.get('articles');
-    //}),
-
-    //updateArticles:function() {
-    //    $.get('articles').then(function(data){
-    //        this.set('articles',data);
-    //    }.bind(this));
-    //},
+    submitArticle: function(article){
+        Ember.set(article,'isSubmitting',true);
+        article.save().then(function(data){
+            Ember.set(data,'isSubmitting',false);
+            Ember.set(data,'isError',false);
+            debugger
+        }).catch(function (err) {
+            Ember.set(article,'isError',true);
+            debugger
+        });
+    },
 
     updateArticles:function() {
         this.set('articles',this.get('store').findAll('article'));
@@ -51,37 +53,12 @@ BlogDemo.IndexController = Ember.Controller.extend({
                 comments: []
             };
             var newArticle = this.store.createRecord('article',newArticleParams);
-            Ember.set(newArticle,'isSubmitting',true);
-            debugger;
+
             this.set('article.content','');
-            newArticle.save().then(function(data){
-                Ember.set(data,'isSubmitting',false);
-                debugger
-            }.bind(this));
+
+            this.get('submitArticle')(newArticle);
         }
         ,
-        //submit:function(){
-        //    debugger
-        //    var content = this.get('article').content;
-        //    var name = this.get('loginService').userName;
-        //    var elderArticles = this.get('articles');
-        //    var newArticle = {
-        //        content:content,
-        //        user:{
-        //            name:name
-        //        },
-        //        submitting:true,
-        //        comments:[]
-        //    };
-        //    elderArticles.unshiftObject(newArticle);
-        //
-        //    $.post('articles',{article:this.get('article')}).then(function(data){
-        //        newArticle.id = data.id;
-        //        Ember.set(newArticle,'submitting',false);
-        //        debugger;
-        //        this.set('article.content','');
-        //    }.bind(this));
-        //},
         comment:function(article) {
             if(!this.get('loginStatus')){
                 alert('请登录!');
@@ -100,20 +77,24 @@ BlogDemo.IndexController = Ember.Controller.extend({
             }.bind(this));
         },
 
+        reSubmit:function(article){
+            this.get('submitArticle')(article);
+        },
+
+        cancelSubmit: function(article){
+            article.destroyRecord();
+        },
+
         removeArticle:function(article){
             if(!this.get('loginStatus')){
                 alert('请登录!');
                 return;
             }
-            //var article = this.get('articles')[index];
             if (this.get('loginService').userName!=article.get('user').name){
                 alert('只有作者才能删除自己的文章!');
                 return;
             }
             article.destroyRecord();
-            //$.post('articles/'+article.id,{_method: "delete"}).then(function (data) {
-            //    this.get('updateArticles').call(this);
-            //}.bind(this));
         },
         removeComments:function(article,cIndex){
             if(!this.get('loginStatus')){
