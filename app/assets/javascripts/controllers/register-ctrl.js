@@ -7,34 +7,39 @@ BlogDemo.RegisterController = Ember.Controller.extend({
         password:'',
         repass:''
     },
+
     login:Ember.inject.service(),
+
     varify: function(){
         var userData = this.get('userData');
         if(userData.password!=userData.repass){
             alert('两次输入密码不一致');
-            return;
+            return false;
         }else if(userData.password==='' || userData.username===''){
             alert('必须输入用户名/密码');
-            return;
+            return false;
         }
-        var user = {
-            user:{
-                name:this.userData.username,
-                email:this.userData.password
-            }
-        };
-        $.post('users',user).then(function(data){
-            if(data.msg!='success'){
-                alert(data.msg);
-            }else{
-                this.get('login').login(data.name, data.id);
-                window.location.href='#/';
-            }
-        }.bind(this));
+
+        return true;
     },
     actions:{
         register : function(){
-            this.varify();
+            if(this.varify()){
+                var user = {
+                    user:{
+                        name:this.userData.username,
+                        email:this.userData.password
+                    }
+                };
+                $.post('users',user).then(function(data){
+                    if(data.msg!='success'){
+                        alert(data.msg);
+                    }else{
+                        this.get('login').login(data.name, data.id);
+                        window.location.href='#/';
+                    }
+                }.bind(this));
+            }
         }
     }
 });

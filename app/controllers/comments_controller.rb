@@ -1,9 +1,5 @@
 class CommentsController < ApplicationController
 
-  if Rails.env == 'development'
-    skip_before_action :verify_authenticity_token
-  end
-
   def create
     @article = Article.find(params[:article_id])
     @comment = @article.comments.create(comment_params)

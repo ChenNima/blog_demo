@@ -8,11 +8,11 @@ Rails.application.routes.draw do
 
   get '/logout', to: 'users#logout'
 
-  resources :articles do
-    resources :comments
+  resources :articles , only: [:index, :destroy, :create] do
+    resources :comments , only: [:destroy, :create]
   end
 
-  resources :users
+  resources :users , only: [ :create]
 
   root 'welcome#index'
   # The priority is based upon order of creation: first created -> highest priority.
