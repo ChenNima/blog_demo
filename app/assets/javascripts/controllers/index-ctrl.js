@@ -3,11 +3,11 @@
  */
 BlogDemo.IndexController = Ember.Controller.extend({
 
-    loginService: BlogDemo.services.login,
+    login:Ember.inject.service(),
 
-    loginStatus: function() {
-        return this.get('loginService').status;
-    }.property('loginService.status'),
+    loginStatus: function () {
+        return this.get('login').isLogin;
+    }.property('login.isLogin'),
 
     vol: function() {
         return 140-this.get('article').content.length;
@@ -26,10 +26,8 @@ BlogDemo.IndexController = Ember.Controller.extend({
         article.save().then(function(data){
             Ember.set(data,'isSubmitting',false);
             Ember.set(data,'isError',false);
-            debugger
         }).catch(function (err) {
             Ember.set(article,'isError',true);
-            debugger
         });
     },
 
@@ -44,7 +42,7 @@ BlogDemo.IndexController = Ember.Controller.extend({
     actions:{
         submit:function() {
             var content = this.get('article').content;
-            var name = this.get('loginService').userName;
+            var name = this.get('login').userName;
             var newArticleParams = {
                 content: content,
                 user: {
@@ -64,7 +62,7 @@ BlogDemo.IndexController = Ember.Controller.extend({
                 alert('请登录!');
                 return;
             }
-            var name = this.get('loginService').userName;
+            var name = this.get('login').userName;
             var comment = {content:article.comment};
             comment.commenter = name;
             var commentBody = {comment: comment};
@@ -78,6 +76,7 @@ BlogDemo.IndexController = Ember.Controller.extend({
         },
 
         reSubmit:function(article){
+            Ember.set(article,'isError',false);
             this.get('submitArticle')(article);
         },
 
@@ -90,7 +89,7 @@ BlogDemo.IndexController = Ember.Controller.extend({
                 alert('请登录!');
                 return;
             }
-            if (this.get('loginService').userName!=article.get('user').name){
+            if (this.get('login').userName!=article.get('user').name){
                 alert('只有作者才能删除自己的文章!');
                 return;
             }
@@ -102,7 +101,7 @@ BlogDemo.IndexController = Ember.Controller.extend({
                 return;
             }
             var comment = article.get('comments')[cIndex];
-            var userName = this.get('loginService').userName;
+            var userName = this.get('login').userName;
             if(userName!=article.get('user').name&&userName!=comment.commenter){
                 alert('文章或评论作者才能删除评论!');
                 return;

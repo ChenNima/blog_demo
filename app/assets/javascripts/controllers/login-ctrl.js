@@ -2,10 +2,16 @@
  * Created by i336106 on 16/10/12.
  */
 BlogDemo.LoginController = Ember.Controller.extend({
+    needs: ['application'],
+
+    application: Ember.computed.alias('controllers.application'),
+
     userData:{
       username:'',
       password:''
     },
+
+    login:Ember.inject.service(),
 
     clearErr:function() {
         this.set('userErr',false);
@@ -31,7 +37,7 @@ BlogDemo.LoginController = Ember.Controller.extend({
                     alert(data.msg);
                     break;
                 case 0:
-                    BlogDemo.services.login.login(data.name,data.id);
+                    this.get('login').login(data.name,data.id);
                     window.location.href='#/';
                     break;
                 default :

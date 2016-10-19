@@ -3,30 +3,36 @@
  */
 BlogDemo.ApplicationController = Ember.Controller.extend({
 
-    init:function(){
-      $.get('cookie_login').then(function(data){
-          if(data.msg==='success'){
-              BlogDemo.services.login.login(data.name,data.id);
-          }
-      });
+    init: function () {
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-Token': csrfToken
+            }
+        });
+        $.get('cookie_login').then(function (data) {
+            if (data.msg === 'success') {
+                this.get('login').login(data.name, data.id);
+            }
+        }.bind(this));
     },
 
-    loginService : BlogDemo.services.login,
+    login:Ember.inject.service(),
 
-    loginStatus: function() {
-        return this.get('loginService').status;
-    }.property('loginService.status'),
+    loginStatus: function () {
+        return this.get('login').isLogin;
+    }.property('login.isLogin'),
 
-    userName: function() {
-        return this.get('loginService').userName;
-    }.property('loginService.userName'),
+    userName: function () {
+        return this.get('login').userName;
+    }.property('login.userName'),
 
-    actions:{
+    actions: {
         logout(){
-            $.get('logout').then(function(data){
-                BlogDemo.services.login.logout();
-                window.location.href='#/';
-            })
+            $.get('logout').then(function (data) {
+                this.get('login').logout();
+                window.location.href = '#/';
+            }.bind(this))
         }
     }
 });

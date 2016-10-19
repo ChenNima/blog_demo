@@ -7,6 +7,7 @@ BlogDemo.RegisterController = Ember.Controller.extend({
         password:'',
         repass:''
     },
+    login:Ember.inject.service(),
     varify: function(){
         var userData = this.get('userData');
         if(userData.password!=userData.repass){
@@ -26,10 +27,10 @@ BlogDemo.RegisterController = Ember.Controller.extend({
             if(data.msg!='success'){
                 alert(data.msg);
             }else{
-                BlogDemo.services.login.login(data.name,data.id);
+                this.get('login').login(data.name, data.id);
                 window.location.href='#/';
             }
-        });
+        }.bind(this));
     },
     actions:{
         register : function(){

@@ -27,24 +27,4 @@
 // for more details see: http://emberjs.com/guides/application/
 BlogDemo = Ember.Application.create();
 
-BlogDemo.services={
-
-};
-
-BlogDemo.services.login={
-    status:false,
-    userName:null,
-    userId:null,
-    login:function(name,id){
-        Ember.set(this,'status',true);
-        Ember.set(this,'userName',name);
-        Ember.set(this.login,'userId',id);
-    },
-    logout:function(){
-        Ember.set(this,'status',false);
-        Ember.set(this,'userName',null);
-        Ember.set(this.login,'userId',null);
-    }
-};
-
 //= require_tree .
